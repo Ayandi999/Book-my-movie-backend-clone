@@ -1,32 +1,32 @@
-# BookMyMovie backend
+# 🎬 BookMyMovie Backend
 
-A movie ticket booking backend built with Bun, Express, TypeScript, PostgreSQL, and Drizzle.
+Fast, type-safe movie ticket booking backend built with Bun + Express + TypeScript + PostgreSQL + Drizzle.
 
-## Tech Stack
-- Runtime: [Bun](https://bun.sh/)
-- Language: TypeScript
-- Framework: Express
-- Database: PostgreSQL (Docker)
-- ORM + Toolkit: Drizzle ORM + Drizzle Kit
-- Auth/Security: JWT + Argon2
-- Validation: Zod
-- Email: Nodemailer
+## 🚀 Tech Stack
+- ⚡ Runtime: [Bun](https://bun.sh/)
+- 🧠 Language: TypeScript
+- 🌐 Framework: Express
+- 🐘 Database: PostgreSQL (Docker)
+- 🧩 ORM + Toolkit: Drizzle ORM + Drizzle Kit
+- 🔐 Auth/Security: JWT + Argon2
+- ✅ Validation: Zod
+- 📧 Email: Nodemailer
 
-## Initial Setup
+## 🛠️ Initial Setup
 
 ### 1) Prerequisites
 - Install [Bun](https://bun.sh/)
 - Install [Docker](https://www.docker.com/)
 
 ### 2) Install dependencies
-Run from project root:
+From project root:
 
 ```bash
 bun install
 ```
 
-### 3) Create environment file
-Create your own `.env` from `.env.example` and fill in real values:
+### 3) Create your environment file
+Copy `.env.example` and fill in real values:
 
 ```bash
 cp .env.example .env
@@ -38,7 +38,7 @@ For Windows PowerShell:
 Copy-Item .env.example .env
 ```
 
-Environment variables:
+### 🔑 Environment Variables
 
 | Variable | Required | Example | Purpose |
 | --- | --- | --- | --- |
@@ -49,8 +49,8 @@ Environment variables:
 | `SMTP_MAIL` | Yes | `you@example.com` | SMTP sender email |
 | `SMTP_PASSWORD` | Yes | `app_password_here` | SMTP/app password |
 
-### 4) Start PostgreSQL container (must be up)
-This project expects the Docker Postgres config from `docker-compose.yml`:
+### 4) Start PostgreSQL container (must be running)
+Expected Docker config from `docker-compose.yml`:
 - image: `postgres:17`
 - port: `5432:5432`
 - user: `postgres`
@@ -63,20 +63,8 @@ Start Docker services:
 docker compose up -d
 ```
 
-Stop Docker services:
-
-```bash
-docker compose down
-```
-
-Stop Docker and remove DB volume (full reset):
-
-```bash
-docker compose down -v
-```
-
-### 5) Push schema to Postgres
-Before testing APIs, make sure DB is initialized:
+### 5) Push schema to PostgreSQL
+Before API testing, initialize DB:
 
 ```bash
 bun run pushdb
@@ -94,25 +82,39 @@ bun run livedb
 bun run dev
 ```
 
-Now you can use Postman to test the API endpoints.
+Now you are ready to test endpoints in Postman. 🎯
 
-## Scripts and Usage
-Use scripts with:
+## 📜 Scripts and Usage
+Run any script with:
 
 ```bash
 bun run <scriptName>
 ```
 
 Available scripts:
-- `dev` - starts the server in watch mode (`bun --watch src/index.ts`)
-- `build` - builds the app into `dist` (`bun build src/index.ts --outdir dist`)
-- `generatedb` - generates Drizzle migration files from schema
-- `migratedb` - runs Drizzle migrations
-- `pushdb` - pushes current schema directly to DB
-- `livedb` - opens Drizzle Studio for DB inspection
+- `dev` → start server in watch mode (`bun --watch src/index.ts`)
+- `build` → build app into `dist` (`bun build src/index.ts --outdir dist`)
+- `generatedb` → generate Drizzle migration files from schema
+- `migratedb` → run Drizzle migrations
+- `pushdb` → push schema directly to database
+- `livedb` → open Drizzle Studio for DB inspection
 
-## Suggested Test Flow
+## 🧪 Suggested Test Flow
 1. `docker compose up -d`
 2. `bun run pushdb`
 3. `bun run dev`
 4. Test endpoints in Postman
+
+## 🧹 Optional Cleanup
+When you are done:
+
+```bash
+docker compose down
+```
+
+## ⚠️ Danger Zone (Data Reset)
+Use this only if you want a fresh database from scratch. This removes Docker volumes and deletes local Postgres data.
+
+```bash
+docker compose down -v
+```
