@@ -1,0 +1,432 @@
+{
+  "info": {
+    "_postman_id": "c0f4ecfb-26e5-4adf-9351-6d4c6cd6ac41",
+    "name": "BookMyMovie API Demo Flow",
+    "description": "End-to-end demo flow for BookMyMovie backend (auth, movies, booking, token refresh, logout).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1 - Get Movies",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/movies",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "movies"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const data = pm.response.json();",
+              "if (Array.isArray(data) && data.length > 0) {",
+              "  const firstMovie = data[0];",
+              "  if (firstMovie.id) {",
+              "    pm.collectionVariables.set('movieId', String(firstMovie.id));",
+              "  }",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 - Get Halls By Movie",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/movies/{{movieId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "movies",
+            "{{movieId}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const data = pm.response.json();",
+              "if (Array.isArray(data) && data.length > 0) {",
+              "  const firstHall = data[0];",
+              "  if (firstHall.id) {",
+              "    pm.collectionVariables.set('hallId', String(firstHall.id));",
+              "  }",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "3 - Register User",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"firstName\": \"Demo\",\n  \"lastName\": \"User\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "register"
+          ]
+        }
+      }
+    },
+    {
+      "name": "4 - Validate Email (Manual Code)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/validate/{{verifyCode}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "validate",
+            "{{verifyCode}}"
+          ]
+        },
+        "description": "Set verifyCode from email/DB, then run."
+      }
+    },
+    {
+      "name": "5 - Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const data = pm.response.json();",
+              "if (data.accessToken) pm.collectionVariables.set('accessToken', data.accessToken);",
+              "if (data.refreshToken) pm.collectionVariables.set('refreshToken', data.refreshToken);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "6 - Booking Page (HTML)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/booking/{{movieId}}/{{hallId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "booking",
+            "{{movieId}}",
+            "{{hallId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "7 - Get Seats",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/booking/{{movieId}}/{{hallId}}/seats",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "booking",
+            "{{movieId}}",
+            "{{hallId}}",
+            "seats"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const data = pm.response.json();",
+              "/*",
+              "  Update the extraction logic based on actual response shape.",
+              "  Example fallback: set seatId manually in collection variables if needed.",
+              "*/",
+              "if (data && data.seats && Array.isArray(data.seats)) {",
+              "  const available = data.seats.find((s) => !s.booked);",
+              "  if (available && available.id) {",
+              "    pm.collectionVariables.set('seatId', String(available.id));",
+              "  }",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "8 - Book Seat (Protected)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/booking/{{movieId}}/{{hallId}}/{{seatId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "booking",
+            "{{movieId}}",
+            "{{hallId}}",
+            "{{seatId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "9 - Refresh Token",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{refreshToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/refresh",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "refresh"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const data = pm.response.json();",
+              "if (data.accessToken) pm.collectionVariables.set('accessToken', data.accessToken);",
+              "if (data.refreshToken) pm.collectionVariables.set('refreshToken', data.refreshToken);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 - Logout",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{refreshToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/logout",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "logout"
+          ]
+        }
+      }
+    },
+    {
+      "name": "11 - Forgot Password (Optional)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{email}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/forgotpassword",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "forgotpassword"
+          ]
+        }
+      }
+    },
+    {
+      "name": "12 - Reset Password (Optional)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"password\": \"{{newPassword}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/reset/{{resetCode}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "reset",
+            "{{resetCode}}"
+          ]
+        },
+        "description": "Set resetCode from email/DB, then run."
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "email",
+      "value": "demo@example.com"
+    },
+    {
+      "key": "password",
+      "value": "123456"
+    },
+    {
+      "key": "newPassword",
+      "value": "12345678"
+    },
+    {
+      "key": "movieId",
+      "value": ""
+    },
+    {
+      "key": "hallId",
+      "value": ""
+    },
+    {
+      "key": "seatId",
+      "value": ""
+    },
+    {
+      "key": "verifyCode",
+      "value": ""
+    },
+    {
+      "key": "resetCode",
+      "value": ""
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "refreshToken",
+      "value": ""
+    }
+  ]
+}

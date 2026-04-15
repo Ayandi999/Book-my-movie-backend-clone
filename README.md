@@ -105,6 +105,51 @@ Available scripts:
 3. `bun run dev`
 4. Test endpoints in Postman
 
+## 📬 Postman Collection Guide
+
+This project includes a ready collection:
+- `postman/BookMyMovie.postman_collection.json`
+
+### 1) Import collection in Postman
+1. Open Postman
+2. Click **Import**
+3. Select `postman/BookMyMovie.postman_collection.json`
+4. Click **Import** again
+
+### 2) Set collection variables
+1. In the left sidebar, find **BookMyMovie API Demo Flow**
+2. Click the **three dots (...)** next to the collection name
+3. Click **Edit**
+4. Open the **Variables** tab
+
+Important variables:
+- `baseUrl` (default `http://localhost:8080`)
+- `movieId`
+- `hallId`
+- `seatId`
+- `verifyCode`
+- `resetCode`
+- `accessToken`
+- `refreshToken`
+
+### 3) Run requests in order
+1. `1 - Get Movies`
+2. `2 - Get Halls By Movie`
+3. `3 - Register User`
+4. `4 - Validate Email (Manual Code)` (set `verifyCode` first)
+5. `5 - Login` (stores `accessToken` + `refreshToken`)
+6. `7 - Get Seats`
+7. `8 - Book Seat (Protected)` (set `seatId` if needed)
+8. `9 - Refresh Token`
+9. `10 - Logout`
+
+### 4) Auto variable behavior
+- `movieId` is auto-saved after `1 - Get Movies`
+- `hallId` is auto-saved after `2 - Get Halls By Movie`
+- `accessToken` and `refreshToken` are auto-saved after `5 - Login` and `9 - Refresh Token`
+
+If any auto-save fails, set the value manually in the collection **Variables** tab.
+
 ## 🧹 Optional Cleanup
 When you are done:
 
