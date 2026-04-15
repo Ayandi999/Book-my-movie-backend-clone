@@ -1,71 +1,118 @@
-# ChaiCode Cinema (BookMyShow Clone)
+# BookMyMovie backend
 
-A modern, dynamic movie ticket booking backend built with speed and type safety in mind. 
+A movie ticket booking backend built with Bun, Express, TypeScript, PostgreSQL, and Drizzle.
 
-## 🚀 Tech Stack
-- **Runtime:** [Bun](https://bun.sh/)
-- **Framework:** Express + TypeScript
-- **Database:** PostgreSQL
-- **ORM:** Drizzle ORM
-- **Auth:** JWT (Access & Refresh Tokens) + Argon2 Hashing
-- **Email:** Nodemailer (SMTP)
+## Tech Stack
+- Runtime: [Bun](https://bun.sh/)
+- Language: TypeScript
+- Framework: Express
+- Database: PostgreSQL (Docker)
+- ORM + Toolkit: Drizzle ORM + Drizzle Kit
+- Auth/Security: JWT + Argon2
+- Validation: Zod
+- Email: Nodemailer
 
-## 🌟 Features
-- **Seat Booking Engine:** Dynamic mapping of movies to halls. Real-time visualization via `index.html`.
-- **Atomic Transactions:** Ensures no double-booking for the exact same seat concurrently.
-- **Robust Authentication:** Secure Registration, Email Verification (via OTP/Code), Login, and Password Reset.
-- **Type-Safe:** End-to-end validation using Zod middlewares.
+## Initial Setup
 
-## 🛠️ Local Setup Instructions
-
-### 1. Prerequisites
+### 1) Prerequisites
 - Install [Bun](https://bun.sh/)
-- Have [Docker](https://www.docker.com/) installed (for the Postgres database).
+- Install [Docker](https://www.docker.com/)
 
-### 2. Clone & Install Dependencies
+### 2) Install dependencies
+Run from project root:
+
 ```bash
-git clone <your-repo-link>
-cd <folder-name>
 bun install
 ```
 
-### 3. Environment Variables
-Create a `.env` file in the root directory based on the provided `.env.example`:
-```env
-# Database
-PORT=8080
-DATABASE_URL="postgresql://userName:Password@localhost:5432/dbName"
+### 3) Create environment file
+Create your own `.env` from `.env.example` and fill in real values:
 
-# JWT Secrets
-ACCESS_SECRET="your-super-secret-access-key"
-REFRESH_SECRET="your-super-secret-refresh-key"
-
-# Email SMTP (Ethereal / external SMTP)
-SMTP_MAIL="your-email"
-SMTP_PASSWORD="your-password"
+```bash
+cp .env.example .env
 ```
 
-### 4. Start the Database
-Spin up the local Postgres database using Docker:
+For Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Environment variables:
+
+| Variable | Required | Example | Purpose |
+| --- | --- | --- | --- |
+| `PORT` | Yes | `8080` | API server port |
+| `DATABASE_URL` | Yes | `postgresql://postgres:postgres@localhost:5432/chaicode` | PostgreSQL connection string |
+| `ACCESS_SECRET` | Yes | `replace_with_access_secret` | JWT access token signing secret |
+| `REFRESH_SECRET` | Yes | `replace_with_refresh_secret` | JWT refresh token signing secret |
+| `SMTP_MAIL` | Yes | `you@example.com` | SMTP sender email |
+| `SMTP_PASSWORD` | Yes | `app_password_here` | SMTP/app password |
+
+### 4) Start PostgreSQL container (must be up)
+This project expects the Docker Postgres config from `docker-compose.yml`:
+- image: `postgres:17`
+- port: `5432:5432`
+- user: `postgres`
+- password: `postgres`
+- database: `chaicode`
+
+Start Docker services:
+
 ```bash
 docker compose up -d
 ```
 
-### 5. Run Migrations
-Push the database schema to your Postgres instance:
-```bash
-bun run db:push
-```
-*(Update this command if you use a specific script to run Drizzle migrations)*
+Stop Docker services:
 
-### 6. Start the Server
+```bash
+docker compose down
+```
+
+Stop Docker and remove DB volume (full reset):
+
+```bash
+docker compose down -v
+```
+
+### 5) Push schema to Postgres
+Before testing APIs, make sure DB is initialized:
+
+```bash
+bun run pushdb
+```
+
+### 6) Optional: Preview DB in Drizzle Studio
+
+```bash
+bun run livedb
+```
+
+### 7) Run development server
+
 ```bash
 bun run dev
 ```
 
-## 🎥 Testing the Frontend
-Open your browser and navigate to:
+Now you can use Postman to test the API endpoints.
+
+## Scripts and Usage
+Use scripts with:
+
+```bash
+bun run <scriptName>
 ```
-http://localhost:8080/api/booking/<movieId>/<hallId>
-```
-Make sure you grab a `movieId` and `hallId` from your seeder or database. If you have logged in via Postman, add your JWT token to the browser's `localStorage` (`localStorage.setItem('accessToken', 'your_token')`) in the browser console to test live seat booking!
+
+Available scripts:
+- `dev` - starts the server in watch mode (`bun --watch src/index.ts`)
+- `build` - builds the app into `dist` (`bun build src/index.ts --outdir dist`)
+- `generatedb` - generates Drizzle migration files from schema
+- `migratedb` - runs Drizzle migrations
+- `pushdb` - pushes current schema directly to DB
+- `livedb` - opens Drizzle Studio for DB inspection
+
+## Suggested Test Flow
+1. `docker compose up -d`
+2. `bun run pushdb`
+3. `bun run dev`
+4. Test endpoints in Postman
