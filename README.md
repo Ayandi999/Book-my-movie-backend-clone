@@ -2,6 +2,12 @@
 
 Fast, type-safe movie ticket booking backend built with Bun + Express + TypeScript + PostgreSQL + Drizzle.
 
+## 📺 Project Walkthrough
+
+[![BookMyMovie Walkthrough](https://img.youtube.com/vi/NVldN_HAq08/maxresdefault.jpg)](https://www.youtube.com/watch?v=NVldN_HAq08)
+
+*Click the image above to watch the full project guide on YouTube.*
+
 ## 🚀 Tech Stack
 - ⚡ Runtime: [Bun](https://bun.sh/)
 - 🧠 Language: TypeScript
